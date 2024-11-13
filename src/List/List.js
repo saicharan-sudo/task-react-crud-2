@@ -38,7 +38,7 @@ function List() {
 
     useEffect(() => {
         let array = localStorageHook.getLocalStorage('DATA');
-        if(array){
+        if(array?.length > 0){
             localStorageHook.setLocalStorage('DATA',array);
         } else {
             localStorageHook.setLocalStorage('DATA',JSONDATA);
