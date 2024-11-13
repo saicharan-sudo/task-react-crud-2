@@ -38,6 +38,7 @@ function List() {
 
     useEffect(() => {
         let array = localStorageHook.getLocalStorage('DATA');
+        console.log("hi");
         if(array?.length > 0){
             localStorageHook.setLocalStorage('DATA',array);
         } else {
