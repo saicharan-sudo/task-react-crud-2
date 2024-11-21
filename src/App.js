@@ -1,10 +1,14 @@
 import logo from './logo.svg';
 import './App.css';
-import List from './List/List';
+import Header from './Header/Header';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function App() {
   return (
-    <List/>
+    <>
+    <Header/>
+    </>    
   );
 }
 

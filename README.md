@@ -68,3 +68,12 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+create two forms items and supplier
+
+provided seperate button for submitting the forms
+
+on click of the records edit is enabled
+
+On update and save api's are giving error 
+
+but intergration is completed
