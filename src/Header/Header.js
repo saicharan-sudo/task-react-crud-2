@@ -331,80 +331,83 @@ function Header() {
         </div>
       )}
 
+      <hr></hr>
+
+
       <div className="container my-3">
         <div className="card">
-        <table className="table table-hover">
-          <thead>
-            <tr>
-              <th>
-                <input
-                  type="checkbox"
-                  disabled={tableData?.length == 0}
-                  checked={selectAll}
-                  onChange={(e) => handleSelectAll(e)}
-                />
-              </th>
-              <th>Supplier</th>
-              <th>Item Name</th>
-              <th>Quantity</th>
-              <th>City</th>
-              <th>Country</th>
-              <th>Email</th>
-              <th>Phone Number</th>
-            </tr>
-          </thead>
+          <table className="table table-hover">
+            <thead>
+              <tr>
+                <th>
+                  <input
+                    type="checkbox"
+                    disabled={tableData?.length == 0}
+                    checked={selectAll}
+                    onChange={(e) => handleSelectAll(e)}
+                  />
+                </th>
+                <th>Supplier</th>
+                <th>Item Name</th>
+                <th>Quantity</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+              </tr>
+            </thead>
 
-          <tbody fontSize={"sm"}>
-            {!isLoading &&
-              tableDataDummy &&
-              tableDataDummy?.length > 0 &&
-              tableDataDummy.map((item, index) => (
-                <tr
-                  key={index + 1}
-                  onClick={() => handleSelectedItemForEdit(item)}
-                  style={{ cursor: "pointer" }}
-                >
-                  <td textAlign={"center"}>
-                    <input
-                      type="checkbox"
-                      checked={selectedItems.includes(item?.itemId)}
-                      onChange={(e) => handleCheckboxChange(e, item)}
-                    />
-                  </td>
+            <tbody fontSize={"sm"}>
+              {!isLoading &&
+                tableDataDummy &&
+                tableDataDummy?.length > 0 &&
+                tableDataDummy.map((item, index) => (
+                  <tr
+                    key={index + 1}
+                    onClick={() => handleSelectedItemForEdit(item)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <td textAlign={"center"}>
+                      <input
+                        type="checkbox"
+                        checked={selectedItems.includes(item?.itemId)}
+                        onChange={(e) => handleCheckboxChange(e, item)}
+                      />
+                    </td>
 
-                  <td>{item?.Supplier?.companyName || "-"}</td>
+                    <td>{item?.Supplier?.companyName || "-"}</td>
 
-                  <td>{item?.itemName || "-"}</td>
+                    <td>{item?.itemName || "-"}</td>
 
-                  <td>{item?.grade || "-"}</td>
+                    <td>{item?.quantity || "-"}</td>
 
-                  <td>{item?.Supplier?.cityName || "-"}</td>
+                    <td>{item?.Supplier?.cityName || "-"}</td>
 
-                  <td>
-                    {/* <input id={`${item.employee}-variable`} step={'.1'} w={'100%'} size={'sm'} type='text' placeholder="Enter..." borderRadius={8} bg={'var(--white-color)'} name={`${item.employee}-base`} autoComplete="off" value={item.variableValue} onKeyDown={handleOnKeyDownOnlyNumber} min={0} /> */}
-                    {item?.Supplier?.countryName || "-"}
-                  </td>
+                    <td>
+                      {/* <input id={`${item.employee}-variable`} step={'.1'} w={'100%'} size={'sm'} type='text' placeholder="Enter..." borderRadius={8} bg={'var(--white-color)'} name={`${item.employee}-base`} autoComplete="off" value={item.variableValue} onKeyDown={handleOnKeyDownOnlyNumber} min={0} /> */}
+                      {item?.Supplier?.countryName || "-"}
+                    </td>
 
-                  <td>
-                    {/* <input id={`${item.employee}-variable`} step={'.1'} w={'100%'} size={'sm'} type='text' placeholder="Enter..." borderRadius={8} bg={'var(--white-color)'} name={`${item.employee}-base`} autoComplete="off" value={item.variableValue} onKeyDown={handleOnKeyDownOnlyNumber} min={0} /> */}
-                    {item?.Supplier?.email || "-"}
-                  </td>
+                    <td>
+                      {/* <input id={`${item.employee}-variable`} step={'.1'} w={'100%'} size={'sm'} type='text' placeholder="Enter..." borderRadius={8} bg={'var(--white-color)'} name={`${item.employee}-base`} autoComplete="off" value={item.variableValue} onKeyDown={handleOnKeyDownOnlyNumber} min={0} /> */}
+                      {item?.Supplier?.email || "-"}
+                    </td>
 
-                  <td>
-                    {/* <input id={`${item.employee}-variable`} step={'.1'} w={'100%'} size={'sm'} type='text' placeholder="Enter..." borderRadius={8} bg={'var(--white-color)'} name={`${item.employee}-base`} autoComplete="off" value={item.variableValue} onKeyDown={handleOnKeyDownOnlyNumber} min={0} /> */}
-                    {item?.Supplier?.phoneNumber || "-"}
+                    <td>
+                      {/* <input id={`${item.employee}-variable`} step={'.1'} w={'100%'} size={'sm'} type='text' placeholder="Enter..." borderRadius={8} bg={'var(--white-color)'} name={`${item.employee}-base`} autoComplete="off" value={item.variableValue} onKeyDown={handleOnKeyDownOnlyNumber} min={0} /> */}
+                      {item?.Supplier?.phoneNumber || "-"}
+                    </td>
+                  </tr>
+                ))}
+              {!isLoading && tableDataDummy && tableDataDummy?.length == 0 && (
+                <tr>
+                  <td colSpan={100}>
+                    <NoRecordsFound></NoRecordsFound>
                   </td>
                 </tr>
-              ))}
-            {!isLoading && tableDataDummy && tableDataDummy?.length == 0 && (
-              <tr>
-                <td colSpan={100}>
-                  <NoRecordsFound></NoRecordsFound>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </>
