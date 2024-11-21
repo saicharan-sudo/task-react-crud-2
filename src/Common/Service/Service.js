@@ -29,7 +29,7 @@ function Service() {
   
   
   function updateData(itemId,supplierId,data){
-    return axios.post(BASEURL + `Item-Supplier/Update-Items-Details/${itemId}/${supplierId}`,data)
+    return axios.patch(BASEURL + `Item-Supplier/Update-Items-Details/${itemId}/${supplierId}`,data)
   }
   
   

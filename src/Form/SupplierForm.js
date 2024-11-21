@@ -5,17 +5,17 @@ import useToaster from "../Common/Toaster/Toaster";
 
 function SupplierForm(props) {
   const {
-    register,
-    handleSubmit,
-    control,
+    register:registerForSupplier,
+    handleSubmit:handleSubmitForSupplier,
+    control:controlForSupplier,
     formState: { errors, isValid },
-    setValue,
-    setError,
-    clearErrors,
-    getValues,
-    watch,
-    setFocus,
-    reset,
+    setValue:setValueForSupplier,
+    setError:setErrorForSupplier,
+    clearErrors:clearErrorsForSupplier,
+    getValues:getValuesForSupplier,
+    watch:watchForSupplier,
+    setFocus:setFocusForSupplier,
+    reset:resetForSupplier,
   } = useForm();
 
   const apiService = Service();
@@ -38,17 +38,17 @@ function SupplierForm(props) {
   useEffect(() => {
     if (props.selectedItemForEdit != null) {
       Object.entries(props.selectedItemForEdit.Supplier).forEach(
-        ([name, value]) => setValue(name, value)
+        ([name, value]) => setValueForSupplier(name, value)
       );
     }
   }, [props.selectedItemForEdit]);
 
   async function initialLoad() {
     await getCountries();
-    await setValue("countryId", "1", { shouldValidate: true });
+    await setValueForSupplier("countryId", "1", { shouldValidate: true });
     // console.log(countryList?.[0]?.countryId,"countryList?.[0]?.countryId");
     await getStates();
-    await setValue("stateId", "1", { shouldValidate: true });
+    await setValueForSupplier("stateId", "1", { shouldValidate: true });
     // console.log(stateList?.[0]?.stateId);
     await getCities();
   }
@@ -61,10 +61,10 @@ function SupplierForm(props) {
           // console.log(res);
           setCountryList(res.data.data.countyList);
 
-          setValue("stateId", "");
+          setValueForSupplier("stateId", "");
           setStateList([]);
 
-          setValue("cityId", "");
+          setValueForSupplier("cityId", "");
           setCityList([]);
           resolve({});
         })
@@ -76,12 +76,12 @@ function SupplierForm(props) {
 
   function getStates() {
     return new Promise((resolve, reject) => {
-      const getData = getValues();
+      const getData = getValuesForSupplier();
       apiService
         .getStates(getData.countryId)
         .then((res) => {
           setStateList(res.data.data.stateList);
-          setValue("cityId", "");
+          setValueForSupplier("cityId", "");
           setCityList([]);
           resolve({});
         })
@@ -93,7 +93,7 @@ function SupplierForm(props) {
 
   function getCities() {
     return new Promise((resolve, reject) => {
-      const getData = getValues();
+      const getData = getValuesForSupplier();
       apiService
         .getCities(getData.countryId, getData.stateId)
         .then((res) => {
@@ -107,7 +107,7 @@ function SupplierForm(props) {
   }
 
   function handleChage() {
-    const data = getValues();
+    const data = getValuesForSupplier();
     let timerId = null;
     // return  (...args)=>{
     //   clearInterval(timerId);
@@ -118,12 +118,12 @@ function SupplierForm(props) {
   }
 
   const onSubmit = () => {
-    const data = getValues();
+    const data = getValuesForSupplier();
     props.handleChangeEventOFSupplierForm(data, isValid);
   };
   return (
     <div className="container-fluid">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmitForSupplier(onSubmit)}>
         <div className="row">
           <div className="col-12 col-lg-6 my-2">
             <div className="">
@@ -133,7 +133,7 @@ function SupplierForm(props) {
               <input
                 type="text"
                 className="form-control"
-                {...register("supplierName", { required: true })}
+                {...registerForSupplier("supplierName", { required: true })}
                 id="supplierName"
                 placeholder="Enter"
                 name="supplierName"
@@ -152,7 +152,7 @@ function SupplierForm(props) {
               <input
                 type="text"
                 className="form-control"
-                {...register("companyName", { required: true })}
+                {...registerForSupplier("companyName", { required: true })}
                 id="companyName"
                 placeholder="Enter"
                 name="companyName"
@@ -171,7 +171,7 @@ function SupplierForm(props) {
 
               <select
                 className="form-select"
-                {...register("countryId", { required: true })}
+                {...registerForSupplier("countryId", { required: true })}
                 onChange={() => {
                   getStates();
                   handleChage();
@@ -201,7 +201,7 @@ function SupplierForm(props) {
 
               <select
                 className="form-select"
-                {...register("stateId", { required: true })}
+                {...registerForSupplier("stateId", { required: true })}
                 onChange={() => {
                   getCities();
                   handleChage();
@@ -229,7 +229,7 @@ function SupplierForm(props) {
 
               <select
                 className="form-select"
-                {...register("cityId", { required: true })}
+                {...registerForSupplier("cityId", { required: true })}
                 onChange={handleChage}
               >
                 {/* <option value={1}>Florida</option>
@@ -256,7 +256,7 @@ function SupplierForm(props) {
               </label>
               <input
                 type="email"
-                {...register("email", { required: true })}
+                {...registerForSupplier("email", { required: true })}
                 className="form-control"
                 id="pwd"
                 placeholder="Enter"
@@ -275,7 +275,7 @@ function SupplierForm(props) {
               </label>
               <input
                 type="text"
-                {...register("phoneNumber", { required: true })}
+                {...registerForSupplier("phoneNumber", { required: true })}
                 className="form-control"
                 id="pwd"
                 placeholder="Enter"

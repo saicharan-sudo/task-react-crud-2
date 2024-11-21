@@ -5,17 +5,17 @@ import { useDebounce } from "../Common/Debounce/useDebounce";
 
 function ItemForm(props) {
   const {
-    register,
-    handleSubmit,
-    control,
+    registerForItemForm:registerForItemForm,
+    handleSubmit:handleSubmitForItemForm,
+    control:controlForItemForm,
     formState: { errors, isValid },
-    setValue,
-    setError,
-    clearErrors,
-    getValues,
-    watch,
-    setFocus,
-    reset,
+    setValue:setValueForItemForm,
+    setError:setErrorForItemForm,
+    clearErrors:clearEForItemFormrrors,
+    getValues:getValuesForItemForm,
+    watch:watchForItemForm,
+    setFocus:setForItemFormFocus,
+    reset:resetForItemForm,
   } = useForm();
 
   const apiService = Service();
@@ -24,7 +24,7 @@ function ItemForm(props) {
   useEffect(() => {
     if (props.selectedItemForEdit != null) {
       Object.entries(props.selectedItemForEdit).forEach(([name, value]) =>
-        setValue(name, value)
+        setValueForItemForm(name, value)
       );
     }
   }, [props.selectedItemForEdit]);
@@ -46,19 +46,19 @@ function ItemForm(props) {
   }, [formDebounce]);
 
   function handleChage() {
-    const data = getValues();
+    const data = getValuesForItemForm();
     props.handleChangeEventOFItemForm(data);
   }
 
   const onSubmit = () => {
-    const data = getValues();
+    const data = getValuesForItemForm();
     props.handleChangeEventOFItemForm(data, isValid);
   };
 
   return (
     <div className="container-fluid">
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmitForItemForm(onSubmit)}>
         <div className="row">
           <div className="col-12 col-lg-6">
             <div className="">
@@ -66,7 +66,7 @@ function ItemForm(props) {
                 Item Name:
               </label>
               <input
-                {...register("itemName", { required: true })}
+                {...registerForItemForm("itemName", { required: true })}
                 type="text"
                 className="form-control"
                 id="itemName"
@@ -85,7 +85,7 @@ function ItemForm(props) {
                 Quantiy:
               </label>
               <input
-                {...register("quantity", { required: true })}
+                {...registerForItemForm("quantity", { required: true })}
                 type="text"
                 className="form-control"
                 id="quantity"
@@ -104,7 +104,7 @@ function ItemForm(props) {
                 Unit Price:
               </label>
               <input
-                {...register("unitPrice", { required: true })}
+                {...registerForItemForm("unitPrice", { required: true })}
                 onKeyDown={handleOnKeyDownOnlyNumber}
                 type="text"
                 className="form-control"
@@ -124,7 +124,7 @@ function ItemForm(props) {
                 Submission Date:
               </label>
               <input
-                {...register("submissionDate", { required: true })}
+                {...registerForItemForm("submissionDate", { required: true })}
                 min={new Date().toISOString().split("T")[0]}
                 type="date"
                 className="form-control"
