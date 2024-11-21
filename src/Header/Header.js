@@ -317,7 +317,7 @@ function Header() {
         )}
       </div>
 
-      {formData != null && (
+      {(formData != null && (itemFormSelectedForItem || itemFormSelectedForSupplier)) && (
         <div className="w-100 text-center">
           <div className="">
             <div className="card-body">
