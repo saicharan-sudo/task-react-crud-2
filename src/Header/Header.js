@@ -201,8 +201,9 @@ function Header() {
         setSelectedItemForEdit(null);
       })
       .catch((error) => {
-        taostService.showErrorMessage(error.response.data.message);
         setIsLoading(false);
+        console.log(error);
+        taostService.showErrorMessage(error.response ? error.response.data.message : error.message);
       });
   }
 
@@ -217,8 +218,8 @@ function Header() {
         setSelectedItemForEdit(null);
       })
       .catch((error) => {
-        taostService.showErrorMessage(error.response.data.message);
         setIsLoading(false);
+        taostService.showErrorMessage(error.response.data.message ? error.response.data.message : error.message);
       });
   }
 
@@ -244,11 +245,11 @@ function Header() {
         <div className="collapse navbar-collapse" id="collapsibleNavbar">
           <ul className="navbar-nav ms-auto">
             {/* <li className="nav-item">
-            <a className="nav-link" href="javascript:void(0)">Link</a>
-            </li>
-            <li className="nav-item">
-            <a className="nav-link" href="javascript:void(0)">Link</a>
-            </li> */}
+      <a className="nav-link" href="javascript:void(0)">Link</a>
+      </li>
+      <li className="nav-item">
+      <a className="nav-link" href="javascript:void(0)">Link</a>
+      </li> */}
             <li className="nav-item">
               <a className="nav-link ">Home</a>
             </li>
@@ -256,7 +257,7 @@ function Header() {
         </div>
       </nav>
 
-      <form className="d-flex justify-content-center gap-2">
+      <form className="d-flex justify-content-center gap-2 my-3">
         <div className="custom-control custom-checkbox custom-control-inline">
           <input
             type="checkbox"
@@ -286,105 +287,126 @@ function Header() {
 
       <div>
         {itemFormSelectedForItem && (
-          <ItemForm
-            handleChangeEventOFItemForm={handleChangeEventOFItemForm}
-            selectedItemForEdit={selectedItemForEdit}
-          />
+          <>
+            <div className="container">
+              <h2 className="text-center">Item Details</h2>
+              <div className="box">
+                <ItemForm
+                  handleChangeEventOFItemForm={handleChangeEventOFItemForm}
+                  selectedItemForEdit={selectedItemForEdit}
+                />
+              </div>
+            </div>
+            <hr></hr>
+          </>
         )}
 
         {itemFormSelectedForSupplier && (
-          <SupplierForm
-            handleChangeEventOFSupplierForm={handleChangeEventOFSupplierForm}
-            selectedItemForEdit={selectedItemForEdit}
-          />
+          <>
+            <div className="container my-3">
+              <h2 className="text-center">Supplier Details</h2>
+              <div className="box">
+                <SupplierForm
+                  handleChangeEventOFSupplierForm={handleChangeEventOFSupplierForm}
+                  selectedItemForEdit={selectedItemForEdit}
+                />
+              </div>
+            </div>
+            <hr></hr>
+          </>
         )}
       </div>
 
       {formData != null && (
-        <div>
-          Submitted Data
-          <p>The data submitted will be displayed below </p>
-          <button className="btn btn-primary" onClick={onSubmit}>
-            Save Changes
-          </button>
+        <div className="w-100 text-center">
+          <div className="">
+            <div className="card-body">
+              <h1>Submitted Data</h1>
+              <h5>The data submitted will be displayed below </h5>
+              <button className="btn btn-primary" onClick={onSubmit}>
+                Save Changes
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
-      <table className="table table-hover">
-        <thead>
-          <tr>
-            <th
-              color={"var(--primary-text-color)"}
-              style={{ textAlign: "center" }}
-            >
-              <input
-                type="checkbox"
-                disabled={tableData?.length == 0}
-                checked={selectAll}
-                onChange={(e) => handleSelectAll(e)}
-              />
-            </th>
-            <th style={{ textAlign: "center" }}>Supplier</th>
-            <th color={"var(--primary-text-color)"}>Item Name</th>
-            <th>Quantity</th>
-            <th color={"var(--primary-text-color)"}>City</th>
-            <th>Country</th>
-            <th>Email</th>
-            <th>Phone Number</th>
-          </tr>
-        </thead>
+      <div className="container my-3">
+        <div className="card">
+        <table className="table table-hover">
+          <thead>
+            <tr>
+              <th>
+                <input
+                  type="checkbox"
+                  disabled={tableData?.length == 0}
+                  checked={selectAll}
+                  onChange={(e) => handleSelectAll(e)}
+                />
+              </th>
+              <th>Supplier</th>
+              <th>Item Name</th>
+              <th>Quantity</th>
+              <th>City</th>
+              <th>Country</th>
+              <th>Email</th>
+              <th>Phone Number</th>
+            </tr>
+          </thead>
 
-        <tbody fontSize={"sm"}>
-          {!isLoading &&
-            tableDataDummy &&
-            tableDataDummy?.length > 0 &&
-            tableDataDummy.map((item, index) => (
-              <tr
-                key={index + 1}
-                onClick={() => handleSelectedItemForEdit(item)}
-                style={{ cursor: "pointer" }}
-              >
-                <td textAlign={"center"}>
-                  <input
-                    type="checkbox"
-                    checked={selectedItems.includes(item?.itemId)}
-                    onChange={(e) => handleCheckboxChange(e, item)}
-                  />
-                </td>
+          <tbody fontSize={"sm"}>
+            {!isLoading &&
+              tableDataDummy &&
+              tableDataDummy?.length > 0 &&
+              tableDataDummy.map((item, index) => (
+                <tr
+                  key={index + 1}
+                  onClick={() => handleSelectedItemForEdit(item)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <td textAlign={"center"}>
+                    <input
+                      type="checkbox"
+                      checked={selectedItems.includes(item?.itemId)}
+                      onChange={(e) => handleCheckboxChange(e, item)}
+                    />
+                  </td>
 
-                <td>{item?.Supplier?.companyName || "-"}</td>
+                  <td>{item?.Supplier?.companyName || "-"}</td>
 
-                <td>{item?.itemName || "-"}</td>
+                  <td>{item?.itemName || "-"}</td>
 
-                <td>{item?.grade || "-"}</td>
+                  <td>{item?.grade || "-"}</td>
 
-                <td>{item?.Supplier?.cityName || "-"}</td>
+                  <td>{item?.Supplier?.cityName || "-"}</td>
 
-                <td>
-                  {/* <input id={`${item.employee}-variable`} step={'.1'} w={'100%'} size={'sm'} type='text' placeholder="Enter..." borderRadius={8} bg={'var(--white-color)'} name={`${item.employee}-base`} autoComplete="off" value={item.variableValue} onKeyDown={handleOnKeyDownOnlyNumber} min={0} /> */}
-                  {item?.Supplier?.countryName || "-"}
-                </td>
+                  <td>
+                    {/* <input id={`${item.employee}-variable`} step={'.1'} w={'100%'} size={'sm'} type='text' placeholder="Enter..." borderRadius={8} bg={'var(--white-color)'} name={`${item.employee}-base`} autoComplete="off" value={item.variableValue} onKeyDown={handleOnKeyDownOnlyNumber} min={0} /> */}
+                    {item?.Supplier?.countryName || "-"}
+                  </td>
 
-                <td>
-                  {/* <input id={`${item.employee}-variable`} step={'.1'} w={'100%'} size={'sm'} type='text' placeholder="Enter..." borderRadius={8} bg={'var(--white-color)'} name={`${item.employee}-base`} autoComplete="off" value={item.variableValue} onKeyDown={handleOnKeyDownOnlyNumber} min={0} /> */}
-                  {item?.Supplier?.email || "-"}
-                </td>
+                  <td>
+                    {/* <input id={`${item.employee}-variable`} step={'.1'} w={'100%'} size={'sm'} type='text' placeholder="Enter..." borderRadius={8} bg={'var(--white-color)'} name={`${item.employee}-base`} autoComplete="off" value={item.variableValue} onKeyDown={handleOnKeyDownOnlyNumber} min={0} /> */}
+                    {item?.Supplier?.email || "-"}
+                  </td>
 
-                <td>
-                  {/* <input id={`${item.employee}-variable`} step={'.1'} w={'100%'} size={'sm'} type='text' placeholder="Enter..." borderRadius={8} bg={'var(--white-color)'} name={`${item.employee}-base`} autoComplete="off" value={item.variableValue} onKeyDown={handleOnKeyDownOnlyNumber} min={0} /> */}
-                  {item?.Supplier?.phoneNumber || "-"}
+                  <td>
+                    {/* <input id={`${item.employee}-variable`} step={'.1'} w={'100%'} size={'sm'} type='text' placeholder="Enter..." borderRadius={8} bg={'var(--white-color)'} name={`${item.employee}-base`} autoComplete="off" value={item.variableValue} onKeyDown={handleOnKeyDownOnlyNumber} min={0} /> */}
+                    {item?.Supplier?.phoneNumber || "-"}
+                  </td>
+                </tr>
+              ))}
+            {!isLoading && tableDataDummy && tableDataDummy?.length == 0 && (
+              <tr>
+                <td colSpan={100}>
+                  <NoRecordsFound></NoRecordsFound>
                 </td>
               </tr>
-            ))}
-          {!isLoading && tableDataDummy && tableDataDummy?.length == 0 && (
-            <tr>
-              <td colSpan={100}>
-                <NoRecordsFound></NoRecordsFound>
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+        </div>
+      </div>
     </>
   );
 }

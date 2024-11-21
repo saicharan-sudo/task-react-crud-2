@@ -79,3 +79,9 @@
       transform: rotate(360deg)
   }
 }
+
+.box{
+  background: #0000ff1c;
+  padding: 20px;
+  border-radius: 15px;
+}

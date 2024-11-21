@@ -47,16 +47,7 @@ function ItemForm(props) {
 
   function handleChage() {
     const data = getValues();
-    // console.log(data);
     props.handleChangeEventOFItemForm(data);
-    // let timerId;
-    // return (...args)=>{
-    //     if(timerId){
-    //         clearInterval(timerId);
-    //     }
-    //     timerId = setInterval(()=>{
-    //     },100)
-    // }
   }
 
   const onSubmit = () => {
@@ -65,12 +56,12 @@ function ItemForm(props) {
   };
 
   return (
-    <div>
-      {JSON.stringify(isValid)}sdfljskflsjdl
+    <div className="container-fluid">
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="row">
           <div className="col-12 col-lg-6">
-            <div className="mb-3 mt-3">
+            <div className="">
               <label htmlFor="text" className="form-label">
                 Item Name:
               </label>
@@ -89,7 +80,7 @@ function ItemForm(props) {
             </div>
           </div>
           <div className="col-12 col-lg-6">
-            <div className="mb-3">
+            <div className="">
               <label htmlFor="quantity" className="form-label">
                 Quantiy:
               </label>
@@ -108,12 +99,13 @@ function ItemForm(props) {
             </div>
           </div>
           <div className="col-12 col-lg-6">
-            <div className="mb-3">
+            <div className="">
               <label htmlFor="unitPrice" className="form-label">
                 Unit Price:
               </label>
               <input
                 {...register("unitPrice", { required: true })}
+                onKeyDown={handleOnKeyDownOnlyNumber}
                 type="text"
                 className="form-control"
                 id="unitPrice"
@@ -127,7 +119,7 @@ function ItemForm(props) {
             </div>
           </div>
           <div className="col-12 col-lg-6">
-            <div className="mb-3">
+            <div className="">
               <label htmlFor="submissionDate" className="form-label">
                 Submission Date:
               </label>
@@ -149,9 +141,11 @@ function ItemForm(props) {
         </div>
 
         {/* {!isValid && */}
-        <button type="submit" className="btn btn-primary">
+        <div className="w-100 text-center">
+        <button type="submit" className="btn btn-primary my-2">
           Submit
         </button>
+        </div>
         {/* } */}
       </form>
     </div>

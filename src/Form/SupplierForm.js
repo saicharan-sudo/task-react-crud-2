@@ -122,11 +122,11 @@ function SupplierForm(props) {
     props.handleChangeEventOFSupplierForm(data, isValid);
   };
   return (
-    <div>
+    <div className="container-fluid">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="row">
-          <div className="col-12 col-lg-6">
-            <div className=" mt-3">
+          <div className="col-12 col-lg-6 my-2">
+            <div className="">
               <label htmlFor="text" className="form-label">
                 Supplier Name:
               </label>
@@ -144,7 +144,7 @@ function SupplierForm(props) {
               )}
             </div>
           </div>
-          <div className="col-12 col-lg-6">
+          <div className="col-12 col-lg-6 my-2">
             <div className="">
               <label htmlFor="companyName" className="form-label">
                 Company Name:
@@ -163,7 +163,7 @@ function SupplierForm(props) {
               )}
             </div>
           </div>
-          <div className="col-12 col-lg-6">
+          <div className="col-12 col-lg-6 my-2">
             <div className="">
               <label htmlFor="pwd" className="form-label">
                 Country:
@@ -193,7 +193,7 @@ function SupplierForm(props) {
               )}
             </div>
           </div>
-          <div className="col-12 col-lg-6">
+          <div className="col-12 col-lg-6 my-2">
             <div className="">
               <label htmlFor="pwd" className="form-label">
                 State:
@@ -221,7 +221,7 @@ function SupplierForm(props) {
               )}
             </div>
           </div>
-          <div className="col-12 col-lg-6">
+          <div className="col-12 col-lg-6 my-2">
             <div className="">
               <label htmlFor="pwd" className="form-label">
                 City:
@@ -249,7 +249,7 @@ function SupplierForm(props) {
               )}
             </div>
           </div>
-          <div className="col-12 col-lg-6">
+          <div className="col-12 col-lg-6 my-2">
             <div className="">
               <label htmlFor="email" className="form-label">
                 Email Address:
@@ -268,7 +268,7 @@ function SupplierForm(props) {
               )}
             </div>
           </div>
-          <div className="col-12 col-lg-6">
+          <div className="col-12 col-lg-6 my-2">
             <div className="">
               <label htmlFor="phoneNumber" className="form-label">
                 Phone Number:
@@ -289,9 +289,11 @@ function SupplierForm(props) {
           </div>
         </div>
         {/* {!isValid &&  */}
+        <div className="w-100 text-center my-2">
         <button type="submit" className="btn btn-primary">
           Submit
         </button>
+        </div>
         {/* // } */}
       </form>
     </div>
