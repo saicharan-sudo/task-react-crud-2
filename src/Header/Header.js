@@ -10,9 +10,8 @@ import Loader from "../Common/Loader/Loader";
 import { useForm } from "react-hook-form";
 
 function Header() {
-  const [itemFormSelectedForItem, setItemFormSelectedForItem] = useState(false);
-  const [itemFormSelectedForSupplier, setItemFormSelectedForSupplier] =
-    useState(false);
+  const [itemCheckBox, setItemCheckBox] = useState(false);
+  const [supplierCheckBox, setSupplierCheckBox] = useState(false);
 
   const [tableData, setTableData] = useState([]);
   const [tableDataDummy, setTableDataDummy] = useState([]);
@@ -28,9 +27,9 @@ function Header() {
 
   const [formData, setFormData] = useState(null);
 
-  const [itemFormValid, setItemFormValid] = useState(false);
+  // const [itemFormValid, setItemFormValid] = useState(false);
 
-  const [supplierFormValid, setSupplierFormValid] = useState(false);
+  // const [supplierFormValid, setSupplierFormValid] = useState(false);
 
   const [selectedItemForEdit, setSelectedItemForEdit] = useState(null);
 
@@ -91,13 +90,17 @@ function Header() {
 
   async function initialLoad() {
     getData();
-    await getCountries();
-    await setValueForSupplier("countryId", "1", { shouldValidate: true });
+    getCountries();
+    // let getCountriesPromise = getCountries();
+    // let getCountriesPromise = getCountries();
+    // await getCountries();
+
+    // await setValueForSupplier("countryId", "1", { shouldValidate: true });
     // console.log(countryList?.[0]?.countryId,"countryList?.[0]?.countryId");
-    await getStates();
-    await setValueForSupplier("stateId", "1", { shouldValidate: true });
+    // await getStates({target:{value:"1"}});
+    // await setValueForSupplier("stateId", "1", { shouldValidate: true });
     // console.log(stateList?.[0]?.stateId);
-    await getCities();
+    // await getCities({target:{value:"1"}});
   }
 
   function getCountries() {
@@ -121,11 +124,17 @@ function Header() {
     });
   }
 
-  function getStates() {
+  function getStates(e, mode = '') {
     return new Promise((resolve, reject) => {
       const getData = getValuesForSupplier();
+      let value = e.target.value;
+      // if (mode != '') {
+      //   value = e.target.value;
+      // } else if (mode == 'edit') {
+      //   value
+      // }
       apiService
-        .getStates(getData.countryId)
+        .getStates(value)
         .then((res) => {
           setStateList(res.data.data.stateList);
           setValueForSupplier("cityId", "");
@@ -138,11 +147,12 @@ function Header() {
     });
   }
 
-  function getCities() {
+  function getCities(e, countryId = '') {
+    let value = e.target.value;
     return new Promise((resolve, reject) => {
       const getData = getValuesForSupplier();
       apiService
-        .getCities(getData.countryId, getData.stateId)
+        .getCities(!countryId ? getData.countryId : countryId, value)
         .then((res) => {
           setCityList(res.data.data.cityList);
           resolve({});
@@ -172,13 +182,21 @@ function Header() {
 
 
   const onSubmitItemForm = () => {
+    if (!supplierCheckBox) {
+      toastrService.showErrorMessage("please fill the supplier form completely");
+      return;
+    }
     const data = getValuesForItemForm();
     console.log(data, 'itemForm');
     // props.handleChangeEventOFItemForm(data, isValid);
   };
 
   const onSubmitSupplierForm = () => {
-    const data = getValuesForItemForm();
+    if (!itemCheckBox) {
+      toastrService.showErrorMessage("please fill the item form completely");
+      return;
+    }
+    const data = getValuesForSupplier();
     console.log(data, 'itemForm');
     // props.handleChangeEventOFItemForm(data, isValid);
   };
@@ -235,7 +253,7 @@ function Header() {
       ...formData,
       supplier: getValues,
     });
-    setSupplierFormValid(isValidForSupplier);
+    // setSupplierFormValid(isValidForSupplier);
   }
 
   function handleChangeEventOFItemForm() {
@@ -245,31 +263,31 @@ function Header() {
       ...formData,
       itemDetails: getValues,
     });
-    setItemFormValid(isValidForItems);
+    // setItemFormValid(isValidForItems);
   }
 
   function handleChangeEventForItem(event) {
     let check = event.target.checked;
-    setItemFormSelectedForItem(check);
+    setItemCheckBox(check);
     resetForItemForm();
-    if (!check) {
-      setFormData({
-        ...formData,
-        itemDetails: {},
-      });
-    }
+    // if (!check) {
+    //   setFormData({
+    //     ...formData,
+    //     itemDetails: {},
+    //   });
+    // }
   }
 
   function handleChangeEventForSupplier(event) {
     let check = event.target.checked;
-    setItemFormSelectedForSupplier(check);
+    setSupplierCheckBox(check);
     resetForSupplier();
-    if (!check) {
-      setFormData({
-        ...formData,
-        supplier: {},
-      });
-    }
+    // if (!check) {
+    //   setFormData({
+    //     ...formData,
+    //     supplier: {},
+    //   });
+    // }
   }
 
   // useEffect(() => {
@@ -277,27 +295,36 @@ function Header() {
   // }, [formData])
 
   function onSubmit() {
-    if (!itemFormSelectedForItem || !itemFormSelectedForSupplier) {
+    if (!itemCheckBox || !supplierCheckBox) {
       toastrService.showErrorMessage("Please enter the data in both the form");
       return;
     }
 
-    if (itemFormSelectedForItem && !isValidForItems) {
+    if (itemCheckBox && !isValidForItems) {
       toastrService.showErrorMessage("please fill the item form completely");
       return;
     }
-    if (itemFormSelectedForSupplier && !isValidForSupplier) {
+
+    if (supplierCheckBox && !isValidForSupplier) {
       toastrService.showErrorMessage("please fill the supplier form completely");
       return;
     }
 
-    let data = { ...formData };
+    if (!isValidForItems || !isValidForSupplier) {
+      toastrService.showErrorMessage("please check the form fields correctly");
+      return;
+    }
 
-    if (itemFormSelectedForItem) {
+    let data = {
+      itemDetails: getValuesForItemForm(),
+      supplier: getValuesForSupplier(),
+    };
+
+    if (itemCheckBox) {
       data.itemDetails.currency = "$";
     }
 
-    if (itemFormSelectedForSupplier) {
+    if (supplierCheckBox) {
       data.supplier.phoneCode = "+91";
     }
     setIsLoading(true);
@@ -322,8 +349,8 @@ function Header() {
       .saveForm(data)
       .then((res) => {
         getData();
-        setItemFormSelectedForItem(false);
-        setItemFormSelectedForSupplier(false);
+        setItemCheckBox(false);
+        setSupplierCheckBox(false);
         setIsLoading(false);
         setSelectedItemForEdit(null);
       })
@@ -339,8 +366,8 @@ function Header() {
       .updateData(itemId, supplierId, data)
       .then((res) => {
         getData();
-        setItemFormSelectedForItem(false);
-        setItemFormSelectedForSupplier(false);
+        setItemCheckBox(false);
+        setSupplierCheckBox(false);
         setIsLoading(false);
         setSelectedItemForEdit(null);
       })
@@ -350,27 +377,32 @@ function Header() {
       });
   }
 
-  function handleSelectedItemForEdit(item) {
+  async function handleSelectedItemForEdit(item) {
     setSelectedItemForEdit(item);
-    setItemFormSelectedForItem(true);
-    setItemFormSelectedForSupplier(true);
-    setTimeout(() => {
+    setItemCheckBox(true);
+    setSupplierCheckBox(true);
 
-      if (item != null) {
+    if (item != null) {
+      // getCountries();
+      await getStates({ target: { value: item.Supplier.countryId } });
+      await getCities({ target: { value: item.Supplier.stateId } }, item.Supplier.countryId);
 
+      setTimeout(() => {
         Object.entries(item?.Supplier).forEach(
-          ([name, value]) => setValueForSupplier(name, value)
+          ([name, value]) => setValueForSupplier(name, value, { shouldValidate: true })
         );
 
         Object.entries(item).forEach(([name, value]) =>
-          setValueForItemForm(name, value)
+          setValueForItemForm(name, value, { shouldValidate: true })
         );
-        getCountries();
-        getStates();
-        getCities();
 
-      }
-    }, 500);
+        let date = new Date(item.submissionDate).toLocaleDateString();
+        let formated = date.split("/").reverse().join('-');
+        setValueForItemForm('submissionDate', formated, { shouldValidate: true })
+
+      }, 500);
+
+    }
   }
 
   return (
@@ -389,11 +421,11 @@ function Header() {
         <div className="collapse navbar-collapse" id="collapsibleNavbar">
           <ul className="navbar-nav ms-auto">
             {/* <li className="nav-item">
-      <a className="nav-link" href="javascript:void(0)">Link</a>
-      </li>
-      <li className="nav-item">
-      <a className="nav-link" href="javascript:void(0)">Link</a>
-      </li> */}
+    <a className="nav-link" href="javascript:void(0)">Link</a>
+    </li>
+    <li className="nav-item">
+    <a className="nav-link" href="javascript:void(0)">Link</a>
+    </li> */}
             <li className="nav-item">
               <a className="nav-link ">Home</a>
             </li>
@@ -407,8 +439,8 @@ function Header() {
             type="checkbox"
             className="custom-control-input"
             id="customRadio"
-            value={itemFormSelectedForItem}
-            checked={itemFormSelectedForItem}
+            value={itemCheckBox}
+            checked={itemCheckBox}
             onChange={handleChangeEventForItem}
           />
           <label className="custom-control-label ms-2" htmlFor="customRadio">
@@ -422,8 +454,8 @@ function Header() {
             id="customRadio2"
             name="example"
             onChange={handleChangeEventForSupplier}
-            value={itemFormSelectedForSupplier}
-            checked={itemFormSelectedForSupplier}
+            value={supplierCheckBox}
+            checked={supplierCheckBox}
           />
           <label className="custom-control-label ms-2" htmlFor="customRadio2">
             Supplier
@@ -432,15 +464,15 @@ function Header() {
       </form>
 
       <div>
-        {itemFormSelectedForItem && (
+        {itemCheckBox && (
           <>
             <div className="container">
               <h2 className="text-center">Item Details</h2>
               <div className="box">
                 {/* <ItemForm
-                  handleChangeEventOFItemForm={handleChangeEventOFItemForm}
-                  selectedItemForEdit={selectedItemForEdit}
-                /> */}
+        handleChangeEventOFItemForm={handleChangeEventOFItemForm}
+        selectedItemForEdit={selectedItemForEdit}
+        /> */}
 
                 <div className="container-fluid">
                   <form onSubmit={handleSubmitForItemForm(onSubmitItemForm)}>
@@ -457,7 +489,7 @@ function Header() {
                             id="itemName"
                             placeholder="Enter"
                             name="itemName"
-                            onChange={handleChangeEventOFItemForm}
+                            // onChange={handleChangeEventOFItemForm}
                             minLength={3}
                             maxLength={255}
                           />
@@ -479,7 +511,7 @@ function Header() {
                             id="quantity"
                             placeholder="Enter"
                             name="quantity"
-                            onChange={handleChangeEventOFItemForm}
+                            // onChange={handleChangeEventOFItemForm}
                             onKeyDown={handleOnKeyDownOnlyNumber}
                             maxLength={10}
                           // onKeyDown={()=>{setValueForItemForm('quantity',getValuesForItemForm('quantity'))}}
@@ -503,7 +535,7 @@ function Header() {
                             id="unitPrice"
                             placeholder="Enter"
                             name="unitPrice"
-                            onChange={handleChangeEventOFItemForm}
+                          // onChange={handleChangeEventOFItemForm}
                           />
                           <small className="smallHint">Numeric</small>
                           {errorsForItems?.unitPrice?.type == "required" && (
@@ -524,7 +556,7 @@ function Header() {
                             id="submissionDate"
                             placeholder="Enter"
                             name="submissionDate"
-                            onChange={handleChangeEventOFItemForm}
+                          // onChange={handleChangeEventOFItemForm}
                           />
                           <small ></small>
                           {errorsForItems?.submissionDate?.type == "required" && (
@@ -550,15 +582,15 @@ function Header() {
           </>
         )}
 
-        {itemFormSelectedForSupplier && (
+        {supplierCheckBox && (
           <>
             <div className="container my-3">
               <h2 className="text-center">Supplier Details</h2>
               <div className="box">
                 {/* <SupplierForm
-                  handleChangeEventOFSupplierForm={handleChangeEventOFSupplierForm}
-                  selectedItemForEdit={selectedItemForEdit}
-                /> */}
+          handleChangeEventOFSupplierForm={handleChangeEventOFSupplierForm}
+          selectedItemForEdit={selectedItemForEdit}
+          /> */}
                 <div className="container-fluid">
                   <form onSubmit={handleSubmitForSupplier(onSubmitSupplierForm)}>
                     <div className="row">
@@ -574,7 +606,7 @@ function Header() {
                             id="supplierName"
                             placeholder="Enter"
                             name="supplierName"
-                            onChange={handleChangeEventOFSupplierForm}
+                          // onChange={handleChangeEventOFSupplierForm}
                           />
                           <small className="smallHint" >Max 50 characters</small>
                           {errorsForSupplier?.supplierName?.type == "required" && (
@@ -594,7 +626,7 @@ function Header() {
                             id="companyName"
                             placeholder="Enter"
                             name="companyName"
-                            onChange={handleChangeEventOFSupplierForm}
+                          // onChange={handleChangeEventOFSupplierForm}
                           />
                           <small className="smallHint" >Max 50 characters</small>
                           {errorsForSupplier?.companyName?.type == "required" && (
@@ -611,10 +643,10 @@ function Header() {
                           <select
                             className="form-select"
                             {...registerForSupplier("countryId", { required: true })}
-                            onChange={() => {
-                              getStates();
-                              handleChangeEventOFSupplierForm()
-                            }}
+                            // onChange={() => {
+                            //   handleChangeEventOFSupplierForm()
+                            // }}
+                            onChange={getStates}
                           >
 
                             <option value={""}>select</option>
@@ -641,10 +673,11 @@ function Header() {
                           <select
                             className="form-select"
                             {...registerForSupplier("stateId", { required: true })}
-                            onChange={() => {
-                              getCities();
-                              handleChangeEventOFSupplierForm()
-                            }}
+                            // onChange={() => {
+                            //   getCities();
+                            //   handleChangeEventOFSupplierForm()
+                            // }}
+                            onChange={(e) => getCities(e, '')}
                           >
                             <option value={""}>select</option>
                             {stateList?.length > 0 &&
@@ -670,7 +703,7 @@ function Header() {
                           <select
                             className="form-select"
                             {...registerForSupplier("cityId", { required: true })}
-                            onChange={handleChangeEventOFSupplierForm}
+                          // onChange={handleChangeEventOFSupplierForm}
                           >
 
                             <option value={""}>select</option>
@@ -700,7 +733,7 @@ function Header() {
                             id="pwd"
                             placeholder="Enter"
                             name="email"
-                            onChange={handleChangeEventOFSupplierForm}
+                          // onChange={handleChangeEventOFSupplierForm}
                           />
                           <small className="smallHint" >Enter valid email address</small>
                           {errorsForSupplier?.email?.type == "required" && (
@@ -720,7 +753,7 @@ function Header() {
                             id="pwd"
                             placeholder="Enter"
                             name="phoneNumber"
-                            onChange={handleChangeEventOFSupplierForm}
+                          // onChange={handleChangeEventOFSupplierForm}
                           />
                           <small className="smallHint" >Enter valid phone number</small>
                           {errorsForSupplier?.phoneNumber?.type == "required" && (
@@ -745,7 +778,8 @@ function Header() {
         )}
       </div>
 
-      {(formData != null && (itemFormSelectedForItem || itemFormSelectedForSupplier)) && (
+      {/* {(formData != null && (itemCheckBox || supplierCheckBox)) && ( */}
+      {(isValidForItems && isValidForSupplier && itemCheckBox && supplierCheckBox) && (
         <div className="w-100 text-center">
           <div className="">
             <div className="card-body">
@@ -799,6 +833,7 @@ function Header() {
                       <input
                         type="checkbox"
                         checked={selectedItems.includes(item?.itemId)}
+                        onClick={(e) => e.stopPropagation()}
                         onChange={(e) => handleCheckboxChange(e, item)}
                       />
                     </td>
